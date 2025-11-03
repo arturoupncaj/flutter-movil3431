@@ -1,21 +1,40 @@
 
 import 'package:flutter/material.dart';
 import 'package:movil3431/entities/contact.dart';
+import 'package:movil3431/services/contact_service.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
+  const HomePage({super.key});
 
-  final List<Contact> contacts = [
-    Contact(name: 'Alice', email: 'alice@email.com', phoneNumber: '123-456-7890'),
-    Contact(name: 'Bob', email: 'bobo@email.com', phoneNumber: '987-654-3210'),
-  ];
+  @override
+  State<HomePage> createState() => _HomePageState();
 
-  HomePage({super.key});
+}
+
+class _HomePageState extends State<HomePage> {
+
+  List<Contact> contacts = [];
+
+  loadContacts() async {
+    final contactService = ContactService();
+    contacts = await contactService.getAllContacts();
+    setState(() {});
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    loadContacts();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('Home Page'),
+      ),
+      floatingActionButton: FloatingActionButton(
+          onPressed: loadContacts,
       ),
       body: Center(
         child: ListView.builder(
